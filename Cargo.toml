@@ -1,0 +1,30 @@
+[package]
+name = "twitter-deleter"
+version = "0.1.0"
+authors = ["Wes <wesjordansemailaddress@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+## inherited from egg-mode 0.15
+serde_json = "1.0"
+#url = "2.1.1"
+futures = "0.3"
+
+[dependencies.chrono]
+version = "0.4"
+features = ["serde"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.tokio]
+version = "1"
+features = ["time", "fs", "rt", "rt-multi-thread"]
+
+[dependencies.egg-mode]
+git = "https://github.com/egg-mode-rs/egg-mode.git"
+branch = "master"
