@@ -4,6 +4,7 @@ KUBESEAL:=kubeseal -n applications
 
 K8S_YAMLS:=sealed-secret.yml kustomization.yml
 
+.PRECIOUS: %/sealed-secret.yml
 %/sealed-secret.yml: %/secret.yml
 	$(KUBESEAL) -o=yaml < $< > $@
 
