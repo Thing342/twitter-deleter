@@ -13,13 +13,9 @@ spec:
               image: twitter-deleter
               imagePullPolicy: Always
               command: ["/usr/bin/twitter-deleter", ">>", "/logs/deleted-tweets.log"]
-              env:
-                - name: DRY_RUN
-                  value: "true"
-                - name: DAYS_TO_KEEP
-                  value: "2"
-                - name: SECRETS_DIR
-                  value: "/secrets"
+              envFrom:
+                - configMapRef:
+                    name: twitter-deleter-config
               volumeMounts:
                 - name: twitter-credentials-secret
                   mountPath: /secrets

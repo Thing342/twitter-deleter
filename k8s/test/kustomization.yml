@@ -1,14 +1,28 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+bases:
+  - ../base
+
+resources:
+  - sealed-secret.yml
+
 commonLabels:
   app: twitter-deleter
   appVersion: 0.1.0
+  release: test
 
 images:
   - name: twitter-deleter
     newName: docker-registry.wesj.app/wesjorg/twitter-deleter
     newTag: 0.1.0
+
+configMapGenerator:
+  - name: twitter-deleter-config
+    literals:
+      - DRY_RUN=true
+      - DAYS_TO_KEEP=2
+      - SECRETS_DIR=/secrets
 
 patches:
   -   target:
@@ -18,7 +32,6 @@ patches:
           path: /spec/jobTemplate/spec/template/spec/imagePullSecrets
           value:
             - name: docker-registry-wesj-app-creds
-resources:
-  - cronjob.yml
-  - pvc.yml
-  - secret-sealed.yml
+        - op: replace
+          path: /spec/schedule
+          value: "*/5 * * * *"

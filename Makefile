@@ -46,10 +46,10 @@ container-test-shell: container
 #---
 
 install-k8s: container-push
-	$(MAKE) -C k8s install
+	$(MAKE) -C k8s install-prod
 
 uninstall-k8s:
-	$(MAKE) -C k8s uninstall
+	$(MAKE) -C k8s uninstall-prod
 
 #---
 
@@ -57,3 +57,4 @@ clean:
 	$(CARGO) clean
 	$(DOCKER) rmi $(IMG_TAGS)
 	$(DOCKER) system prune
+	$(MAKE) -c k8s clean

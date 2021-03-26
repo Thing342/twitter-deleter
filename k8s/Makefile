@@ -2,21 +2,23 @@ KUSTOMIZE:=kustomize
 KUBECTL:=kubectl -n applications
 KUBESEAL:=kubeseal -n applications
 
-K8S_YAMLS := cronjob.yml pvc.yml secret-sealed.yml kustomization.yml
+K8S_YAMLS:=sealed-secret.yml kustomization.yml
 
-secret-sealed.yml: secret.yml
+%/sealed-secret.yml: %/secret.yml
 	$(KUBESEAL) -o=yaml < $< > $@
 
-kustomized.yml: $(K8S_YAMLS)
-	$(KUSTOMIZE) build > $@
+%/kustomized.yml: $(addprefix %/,$(K8S_YAMLS))
+	$(KUSTOMIZE) build $(dir $@) > $@
 
-all: kustomized.yml
+all: test/kustomized.yml prod/kustomized.yml
 
-install: kustomized.yml
+install-%: %/kustomized.yml
 	$(KUBECTL) apply -f $<
 
-uninstall: kustomized.yml
+uninstall-%: %/kustomized.yml
 	$(KUBECTL) delete -f $<
 
-clean:
-	rm kustomized.yml secret-sealed.yml || true
+clean-%: %/
+	rm $<kustomized.yml $<sealed-secret.yml || true
+
+clean: clean-test clean-prod
