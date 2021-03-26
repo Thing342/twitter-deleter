@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app: twitter-deleter
+  appVersion: 0.1.0
+
+images:
+  - name: twitter-deleter
+    newName: docker-registry.wesj.app/wesjorg/twitter-deleter
+    newTag: 0.1.0
+
+patches:
+  -   target:
+        kind: CronJob
+      patch: |-
+        - op: replace
+          path: /spec/jobTemplate/spec/template/spec/imagePullSecrets
+          value:
+            - name: docker-registry-wesj-app-creds
+resources:
+  - cronjob.yml
+  - pvc.yml
+  - secret-sealed.yml

@@ -22,7 +22,7 @@ container:
 	$(DOCKER) build $(addprefix -t ,$(IMG_TAGS)) $(addprefix --build-arg ,$(IMG_BUILD_ARGS)) .
 
 container-push:
-	$(DOCKER) push $(IMG_TAGS)
+	$(DOCKER) push -a $(IMG_REPO)/$(IMG_OWNER)/$(IMG_TITLE)
 
 DOCKER_TEST_ENV:=\
 	DRY_RUN=true\
@@ -42,6 +42,14 @@ container-test: container
 
 container-test-shell: container
 	$(DOCKER) run --rm -it --entrypoint bash $(DOCKER_TEST_ARGS)
+
+#---
+
+install-k8s: container-push
+	$(MAKE) -C k8s install
+
+uninstall-k8s:
+	$(MAKE) -C k8s uninstall
 
 #---
 
