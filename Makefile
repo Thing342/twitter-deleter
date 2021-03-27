@@ -3,8 +3,22 @@ DOCKER:=docker
 
 PWD:=$(shell pwd)
 
+GIT_SHA:=$(shell git rev-parse --short HEAD)
+
+LICENSE:=$(shell cat LICENSE)
+print-license: LICENSE
+	cat $^
+
+check-license: Cargo.lock LICENSE
+	$(CARGO) lichking check
+
+dependency-licenses.txt: Cargo.lock LICENSE
+	$(CARGO) lichking bundle --file $@ || true
+
+#----
+
 APP_NAME:=twitter-deleter
-$(APP_NAME):
+$(APP_NAME): print-license check-license dependency-licenses.txt
 	$(CARGO) build
 
 #----
@@ -12,13 +26,13 @@ $(APP_NAME):
 IMG_REPO:=docker-registry.wesj.app
 IMG_OWNER:=wesjorg
 IMG_TITLE:=$(APP_NAME)
-IMG_VERSIONS:=0.1.0.1 0.1.0 0.1 0 latest
+IMG_VERSIONS:=1.0.0.0 1.0.0 1.0 1 latest $(GIT_SHA)
 IMG_TAGS:=$(addprefix $(IMG_REPO)/$(IMG_OWNER)/$(IMG_TITLE):,$(IMG_VERSIONS))
 
 IMG_BUILD_ARGS:=\
 	RUSTC_VERSION=1.50 \
-	APP_VERSION=0.1.0.1
-container:
+	APP_VERSION=1.0.0.0
+container: print-license check-license dependency-licenses.txt
 	$(DOCKER) build $(addprefix -t ,$(IMG_TAGS)) $(addprefix --build-arg ,$(IMG_BUILD_ARGS)) .
 
 container-push: container

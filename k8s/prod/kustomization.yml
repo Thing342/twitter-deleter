@@ -9,13 +9,13 @@ resources:
 
 commonLabels:
   app: twitter-deleter
-  appVersion: 0.1.0.1
+  appVersion: 1.0.0.0
   release: prod
 
 images:
   - name: twitter-deleter
     newName: docker-registry.wesj.app/wesjorg/twitter-deleter
-    newTag: 0.1.0.1
+    newTag: 1.0.0.0
 
 configMapGenerator:
   - name: twitter-deleter-config

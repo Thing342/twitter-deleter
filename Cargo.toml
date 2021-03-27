@@ -1,8 +1,10 @@
 [package]
 name = "twitter-deleter"
-version = "0.1.0"
-authors = ["Wes <wesjordansemailaddress@gmail.com>"]
+version = "1.0.0"
+authors = ["Wes J <wes@wesj.org.com>"]
 edition = "2018"
+
+license="GNU AFFERO GENERAL PUBLIC LICENSE v3"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
