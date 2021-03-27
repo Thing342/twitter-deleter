@@ -65,6 +65,12 @@ install-k8s: container-push
 uninstall-k8s:
 	$(MAKE) -C k8s uninstall-prod
 
+install-argocd: container-push
+	$(MAKE) -C k8s argocd-install
+
+uninstall-argocd:
+	$(MAKE) -C k8s argocd-uninstall
+
 #---
 
 clean:

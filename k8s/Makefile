@@ -23,3 +23,9 @@ clean-%: %/
 	rm $<kustomized.yml $<sealed-secret.yml || true
 
 clean: clean-test clean-prod
+
+argocd-install: argo.yml
+	kubectl --namespace argocd apply -f $<
+
+argocd-uninstall:
+	kubectl --namespace argocd delete -f argo.yml
