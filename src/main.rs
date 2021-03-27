@@ -108,7 +108,9 @@ fn user_timeline_stream(acct: String, with_replies: bool, with_rts: bool, token:
 async fn start() {
     let config = Config::load().await.expect("Failed to load Config.");
 
-    eprintln!("Dry run! Printing tweets that would be deleted.");
+    if config.dry_run {
+        eprintln!("Dry run! Printing tweets that would be deleted.");
+    }
     eprintln!("Deleting tweets older than {}", config.delete_before);
 
     let configg = &config;

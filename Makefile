@@ -12,16 +12,16 @@ $(APP_NAME):
 IMG_REPO:=docker-registry.wesj.app
 IMG_OWNER:=wesjorg
 IMG_TITLE:=$(APP_NAME)
-IMG_VERSIONS:=0.1.0 0.1 0 latest
+IMG_VERSIONS:=0.1.0.1 0.1.0 0.1 0 latest
 IMG_TAGS:=$(addprefix $(IMG_REPO)/$(IMG_OWNER)/$(IMG_TITLE):,$(IMG_VERSIONS))
 
 IMG_BUILD_ARGS:=\
 	RUSTC_VERSION=1.50 \
-	APP_VERSION=0.1.0
+	APP_VERSION=0.1.0.1
 container:
 	$(DOCKER) build $(addprefix -t ,$(IMG_TAGS)) $(addprefix --build-arg ,$(IMG_BUILD_ARGS)) .
 
-container-push:
+container-push: container
 	$(DOCKER) push -a $(IMG_REPO)/$(IMG_OWNER)/$(IMG_TITLE)
 
 DOCKER_TEST_ENV:=\
