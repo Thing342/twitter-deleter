@@ -15,7 +15,7 @@ RUN cargo build --release
 FROM $DEPLOY_IMAGE
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get upgrade && apt-get -y install ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get -y upgrade && apt-get -y install ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /work/target/release/twitter-deleter /usr/bin/twitter-deleter
 COPY LICENSE /LICENSE
