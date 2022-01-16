@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "twitter-deleter.fullname" . }}-test-dryrun"
+  labels:
+    {{- include "twitter-deleter.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: deleter
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+      command: ["/usr/bin/twitter-deleter"]
+      env: 
+      {{- with .Values.options }}
+        - name: DRY_RUN
+          value: "true"
+        - name: DAYS_TO_KEEP
+          value: "{{ .daysToKeep }}"
+        - name: SECRETS_DIR
+          value: "/secrets"
+      {{ end -}}
+      volumeMounts:
+        - name: twitter-credentials-secret
+          mountPath: /secrets
+          readOnly: true
+  {{- with .Values.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  volumes:
+    - name: twitter-credentials-secret
+      secret:
+        secretName: {{ include "twitter-deleter.fullname" . }}-twitter-credentials
+  restartPolicy: Never
+  serviceAccountName: {{ include "twitter-deleter.serviceAccountName" . }}

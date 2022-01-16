@@ -1,0 +1,14 @@
+options:
+  dryRun: false
+  daysToKeep: 3
+
+cronJob:
+  schedule: "0 * * * *"
+  restartPolicy: OnFailure
+
+storage:
+  storageClassName: local-path
+  size: 2Gi
+
+imagePullSecrets: 
+  - name: docker-registry-wesj-app-creds

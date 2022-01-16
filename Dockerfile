@@ -4,7 +4,7 @@ ARG APP_VERSION="latest"
 
 ARG DEPLOY_IMAGE="debian:bullseye-slim"
 
-FROM $RUSTC_IMAGE:$RUSTC_VERSION as build
+FROM docker.io/library/rust:1.50 as build
 
 WORKDIR /work
 ADD Cargo.* ./
@@ -12,7 +12,7 @@ ADD src ./src
 RUN cargo build --release
 
 # Main image
-FROM $DEPLOY_IMAGE
+FROM docker.io/library/debian:bullseye-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get -y upgrade && apt-get -y install ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
