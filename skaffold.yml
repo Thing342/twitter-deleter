@@ -24,7 +24,7 @@ deploy:
         chartPath: chart
         namespace: apps
         valuesFiles:
-          - values/prod.yml
+          - values/prod.yaml
           - credentials.yml
         artifactOverrides:
           image: docker-registry.wesj.app/twitter-deleter
