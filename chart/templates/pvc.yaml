@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "twitter-deleter.fullname" . }}-logs-data
+  labels:
+    {{- include "twitter-deleter.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ .Values.storage.storageClassName }}
+  selector:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.size }}

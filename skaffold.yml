@@ -1,0 +1,58 @@
+apiVersion: skaffold/v2beta21
+kind: Config
+metadata:
+  name: keycloak
+build:
+  tagPolicy:
+    gitCommit: {}
+  local:
+    push: true
+
+  artifacts:
+  - image: docker-registry.wesj.app/twitter-deleter
+    context: .
+    docker:
+      dockerfile: Dockerfile
+      buildArgs:
+        APP_VERSION: 1.0.0
+
+deploy:
+  kubeContext: wesj-k3s
+  helm:
+    releases:
+      - name: twitter-deleter-prod
+        chartPath: chart
+        namespace: apps
+        valuesFiles:
+          - values/prod.yml
+          - credentials.yml
+        artifactOverrides:
+          image: docker-registry.wesj.app/twitter-deleter
+        imageStrategy:
+          helm: {}
+    flags:
+      global: []
+      install: ["--dependency-update", "--timeout", "3m0s"]
+      upgrade: ["--atomic", "--timeout", "3m0s"]
+
+profiles:
+- name: dev
+  activation:
+    - command: dev
+  build:
+    local:
+      push: false
+  deploy:
+    kubeContext: k3d-myk3dtest
+    helm:
+      releases:
+        - name: twitter-deleter-dev
+          namespace: twitter-deleter-dev
+          chartPath: chart
+          valuesFiles:
+            - values/dev.yaml
+            - credentials.yml
+          artifactOverrides:
+            image: docker-registry.wesj.app/twitter-deleter
+          imageStrategy:
+            helm: {}

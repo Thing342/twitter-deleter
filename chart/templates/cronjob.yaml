@@ -1,0 +1,52 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "twitter-deleter.fullname" . }}-cronjob
+  labels:
+    {{- include "twitter-deleter.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.cronJob.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "twitter-deleter.selectorLabels" . | nindent 12 }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 14 }}
+          {{- end }}
+          containers:
+            - name: deleter
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+              command: ["sh", "-x", "-c", "/usr/bin/twitter-deleter >> /logs/deleted-tweets.log"]
+              env: 
+              {{- with .Values.options }}
+                - name: DRY_RUN
+                  value: "{{ .dryRun }}"
+                - name: DAYS_TO_KEEP
+                  value: "{{ .daysToKeep }}"
+                - name: SECRETS_DIR
+                  value: "/secrets"
+              {{ end -}}
+              volumeMounts:
+                - name: twitter-credentials-secret
+                  mountPath: /secrets
+                  readOnly: true
+                - name: logs-pvc
+                  mountPath: /logs
+          volumes:
+            - name: twitter-credentials-secret
+              secret:
+                secretName: {{ include "twitter-deleter.fullname" . }}-twitter-credentials
+            - name: logs-pvc
+              persistentVolumeClaim:
+                claimName: {{ include "twitter-deleter.fullname" . }}-logs-data
+          restartPolicy: {{ .Values.cronJob.restartPolicy }}
+          serviceAccountName: {{ include "twitter-deleter.serviceAccountName" . }}

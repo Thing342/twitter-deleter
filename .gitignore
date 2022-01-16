@@ -4,3 +4,4 @@
 *.log
 *.iml
 secret.yml
+credentials.yml

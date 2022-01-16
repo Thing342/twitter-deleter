@@ -1,0 +1,11 @@
+==================
+Tweet Deleter v{{ .Values.image.tag }} configured with following settings:
+
+User: {{ .Values.credentials.username }}
+Dry Run: {{ .Values.options.dryRun }}
+Days of Tweets to keep: {{ .Values.options.daysToKeep }}
+Schedule: {{ .Values.cronJob.schedule }}
+
+This code is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE.
+
+==================
