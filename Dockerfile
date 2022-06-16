@@ -4,7 +4,7 @@ ARG APP_VERSION="latest"
 
 ARG DEPLOY_IMAGE="debian:bullseye-slim"
 
-FROM docker.io/library/rust:1.50 as build
+FROM docker.io/library/rust:1.60 as build
 
 WORKDIR /work
 ADD Cargo.* ./

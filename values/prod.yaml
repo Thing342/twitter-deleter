@@ -11,4 +11,4 @@ storage:
   size: 2Gi
 
 imagePullSecrets: 
-  - name: docker-registry-wesj-app-creds
+  - name: docker-registry-wesj-app
