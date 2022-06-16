@@ -61,6 +61,7 @@ impl Config {
     }
 
     fn should_delete(&self, t: &Tweet) -> bool {
+        (t.favorited.is_some() && t.favorited.unwrap()) ||
         t.created_at < self.delete_before
     }
 
