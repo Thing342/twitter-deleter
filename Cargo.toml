@@ -1,6 +1,6 @@
 [package]
 name = "twitter-deleter"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Wes J <wes@wesj.org.com>"]
 edition = "2018"
 

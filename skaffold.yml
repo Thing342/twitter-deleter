@@ -14,7 +14,7 @@ build:
     docker:
       dockerfile: Dockerfile
       buildArgs:
-        APP_VERSION: 1.0.0
+        APP_VERSION: 1.1.0
 
 deploy:
   kubeContext: wesj-k3s
